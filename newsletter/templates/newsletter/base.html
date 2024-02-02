@@ -1,10 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load static %}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
 
-</body>
+  <head>
+    <script src="{% static 'js/color-modes.js' %}"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pricing.css' %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+<div class="container py-3">
+<header>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <nav class="ms-5">
+        <a class="p-2 btn btn-outline-primary" href="/">Главная</a>
+        <a class="p-2 btn btn-outline-primary" href="#">Клиенты</a>
+        <a class="p-2 btn btn-outline-primary" href="#">Сообщения</a>
+        <a class="p-2 btn btn-outline-primary" href="#">Рассылки</a>
+        <a class="p-2 btn btn-outline-primary" href="#">История рассылок</a>
+        <a class="p-2 btn btn-outline-primary" href="#">Статьи</a>
+        <a class="p-2 btn btn-outline-primary" href="#">Вход</a>
+    </nav>
+</div>
+</header>
+
+{% block content %}
+{% endblock %}
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
 </html>
