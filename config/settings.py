@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_crontab',
+    'django_apscheduler',
     'newsletter',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -149,10 +150,10 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
 
-# AUTH_USER_MODEL = 'users.User'
-# LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = '/'
-# LOGIN_URL = 'users:login'
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'users:login'
 
 
 CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
@@ -164,8 +165,3 @@ if CACHE_ENABLED:
             "LOCATION": os.getenv('CACHE_LOCATION'),
         }
     }
-
-# Crontab
-# CRONJOBS = [
-#     ('*/5 * * * *', 'newsletter.cron.send_letter')
-# ]

@@ -1,0 +1,13 @@
+{%extends 'newsletter/base.html' %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h4>
+        {% if object %}
+            Редактировать
+        {% else %}
+            Добавить рассылку
+        {% endif %}
+    </h4>
+</div>
+{% include 'newsletter/includes/inc_form.html' %}
+{% endblock %}

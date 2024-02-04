@@ -29,8 +29,8 @@ class Client(models.Model):
         return f'{self.name} ({self.mail})'
 
     class Meta:
-        verbose_name = 'пользователь'
-        verbose_name_plural = 'пользователи'
+        verbose_name = 'клиент'
+        verbose_name_plural = 'клиенты'
 
 
 class Message(models.Model):

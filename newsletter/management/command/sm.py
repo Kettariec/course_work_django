@@ -1,43 +1,70 @@
-import smtplib
-from django.core.management import BaseCommand
-from datetime import datetime, timedelta
-from calendar import monthrange
-from newsletter.models import NewsLetter, Log
+import logging
+from django.conf import settings
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
+from django.core.management.base import BaseCommand
+from django_apscheduler.jobstores import DjangoJobStore
+from django_apscheduler.models import DjangoJobExecution
+from django_apscheduler import util
 from newsletter.services import send_letter
+
+logger = logging.getLogger(__name__)
+
+
+def my_job():
+    send_letter()
+
+# The `close_old_connections` decorator ensures that database connections, that have become
+# unusable or are obsolete, are closed before and after your job has run. You should use it
+# to wrap any jobs that you schedule that access the Django database in any way.
+
+
+@util.close_old_connections
+def delete_old_job_executions(max_age=604_800):
+    """
+    This job deletes APScheduler job execution entries older than `max_age` from the database.
+    It helps to prevent the database from filling up with old historical records that are no
+    longer useful.
+
+    :param max_age: The maximum length of time to retain historical job execution records.
+                    Defaults to 7 days.
+    """
+    DjangoJobExecution.objects.delete_old_job_executions(max_age)
 
 
 class Command(BaseCommand):
+    help = "Runs APScheduler."
+
     def handle(self, *args, **options):
-        now = datetime.now()
-        mailing_list = NewsLetter.objects.filter(date__lte=now, time__lte=now)
-        created_mailing_list = [mailing for mailing in mailing_list if mailing.status == 'created']
+        scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
+        scheduler.add_jobstore(DjangoJobStore(), "default")
 
-        for mailing in created_mailing_list:
-            user = mailing.user
-            mailing.status = 'started'
-            mailing.save()
+        scheduler.add_job(
+            my_job,
+            trigger=CronTrigger(minute="*/1"),  # Every 1 minute
+            id="my_job",  # The `id` assigned to each job MUST be unique
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info("Added job 'send_letter'.")
 
-            clients = mailing.client.all()
-            message = mailing.message
-            try:
-                response = send_letter(clients, message)
+        scheduler.add_job(
+            delete_old_job_executions,
+            trigger=CronTrigger(
+                day_of_week="mon", hour="00", minute="00"
+            ),  # Midnight on Monday, before start of the next work week.
+            id="delete_old_job_executions",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info(
+            "Added weekly job: 'delete_old_job_executions'."
+        )
 
-                log = Log.objects.create(time=now, status=bool(response), server_response='', mailing=mailing,
-                                         user=user)
-                mailing.status = 'created'
-                if mailing.periodisity == 'day':
-                    mailing.date += timedelta(days=1)
-                elif mailing.periodisity == 'week':
-                    mailing.date += timedelta(weeks=1)
-                elif mailing.periodisity == 'month':
-                    month = now.month
-                    year = now.year
-                    days_count = monthrange(year, month)
-                    mailing.date += timedelta(days=days_count[1])
-            except smtplib.SMTPException as e:
-                log = Log.objects.create(time=now, status=bool(response), server_response=e, mailing=mailing,
-                                         user=user)
-                mailing.status = 'created'
-            finally:
-                log.save()
-                mailing.save()
+        try:
+            logger.info("Starting scheduler...")
+            scheduler.start()
+        except KeyboardInterrupt:
+            logger.info("Stopping scheduler...")
+            scheduler.shutdown()
+            logger.info("Scheduler shut down successfully!")
