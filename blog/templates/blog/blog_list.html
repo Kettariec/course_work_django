@@ -1,0 +1,34 @@
+{% extends 'newsletter/base.html' %}
+
+{% block content %}
+{% load my_tags %}
+<div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'blog:create' %}">Добавить материал</a>
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    {% for object in object_list %}
+    {% if object.is_published %}
+    <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+        Материал {{ object|title }} <br>
+            Содержание: {{ object.body }}
+            <img src="{% media_path object.image %}" class="card-img-top" alt="{{object.title}}">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="{% url 'blog:view' object.pk %}"
+                       class="btn btn-sm btn-outline-secondary">Просмотр</a>
+                    <a href="{% url 'blog:edit' object.pk %}"
+                       class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                    <a href="{% url 'blog:delete' object.pk %}"
+                       class="btn btn-sm btn-outline-secondary">Удалить</a>
+                </div>
+
+              <a class="btn btn-warning" href="{% url 'blog:toggle_activity' object.pk %}">Скрыть</a>
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -15,7 +15,8 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled mt-3 mb-4">
-
+              Количество клиентов: {{ client_count }}
+              </br>__________________________
             </ul>
             <a type="button" class="btn btn-outline-primary " href="{% url 'newsletter:create_client' %}">Добавить</a>
           </div>
@@ -28,7 +29,8 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled mt-3 mb-4">
-
+              Количество сообщений: {{ message_count }}
+              </br>_____________________________
             </ul>
             <a type="button" class="btn btn-outline-primary " href="{% url 'newsletter:create_message' %}">Добавить</a>
           </div>
@@ -41,7 +43,8 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled mt-3 mb-4">
-
+              Количество рассылок: {{ newsletter_count }}
+              Количество активных рассылок: {{ active_newsletter }}
             </ul>
             <a type="button" class="btn btn-outline-primary " href="{% url 'newsletter:create_newsletter' %}">Добавить</a>
           </div>

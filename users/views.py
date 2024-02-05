@@ -1,9 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
-from newsletter.services import send_letter
 from django.views.generic import CreateView, UpdateView, ListView
 from users.models import User
-from newsletter.models import Message
 from users.forms import RegisterForm, UserForm, ListUserForm
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
@@ -59,7 +57,7 @@ class UserUpdateView(UpdateView):
     """Контроллер страницы профиля"""
     model = User
     form_class = UserForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('newsletter:index')
 
     def get_object(self, queryset=None):
         """Отключаем необходимость получения pk, получая его из запроса"""
@@ -71,9 +69,12 @@ def generate_password(request):
     new_password = User.objects.make_random_password()
     request.user.set_password(new_password)
     request.user.save()
-    message = Message.objects.create(title='Смена пароля', text=f'Ваш новый пароль для авторизации: {new_password}',
-                                     user=User.objects.get(pk=request.user.pk))
-    send_letter([request.user.email], message)
+    send_mail(
+        'Смена пароля',
+        f'Ваш новый пароль для авторизации: {new_password}',
+        EMAIL_HOST_USER,
+        [request.user.email]
+    )
     messages.success(request, 'Вам на почту отправлено письмо с новым паролем для вашего аккаунта')
     return redirect(reverse('users:login'))
 

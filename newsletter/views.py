@@ -14,11 +14,13 @@ class HomeTemplateView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
         client_count = len(Client.objects.filter(user=self.request.user.pk))
+        message_count = len(Message.objects.filter(user=self.request.user.pk))
         newsletter_count = len(NewsLetter.objects.filter(user=self.request.user.pk))
-        active_newsletter = len(NewsLetter.objects.filter(user=self.request.user.pk, status='created'))
+        active_newsletter = len(NewsLetter.objects.filter(user=self.request.user.pk, status='started'))
         context_data['newsletter_count'] = newsletter_count
         context_data['client_count'] = client_count
         context_data['active_newsletter'] = active_newsletter
+        context_data['message_count'] = message_count
         return context_data
 
 
@@ -128,7 +130,7 @@ class NewsLetterListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Вывод рассылок пользователя либо всех рассылок для модератора"""
-        if self.request.user.has_perm('mailing.view_mailing'):
+        if self.request.user.has_perm('newsletter.view_newsletter'):
             return super().get_queryset()
         return super().get_queryset().filter(user=self.request.user)
 
@@ -156,17 +158,28 @@ class NewsLetterDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.handle_no_permission()
 
 
-def status_mailing(request, pk):
+def status_newsletter(request, pk):
     """Контроллер смены статуса рассылки"""
     newsletter = NewsLetter.objects.get(pk=pk)
-    if request.user == newsletter.user or request.user.has_perm('mailing.set_status'):
+    if request.user == newsletter.user or request.user.has_perm('newsletter.set_status'):
         if newsletter.status == 'created':
-            newsletter.status = 'completed'
+            newsletter.status = 'started'
             newsletter.save()
-        elif newsletter.status == 'completed':
+        elif newsletter.status == 'started':
             newsletter.status = 'created'
             newsletter.save()
-    return redirect(reverse('mailing:mailing_list'))
+        else:
+            newsletter.status = 'started'
+            newsletter.save()
+    return redirect(reverse('newsletter:newsletter_list'))
+
+
+def finish_newsletter(request, pk):
+    newsletter = NewsLetter.objects.get(pk=pk)
+    if request.user == newsletter.user or request.user.has_perm('newsletter.set_status'):
+        newsletter.status = 'completed'
+        newsletter.save()
+    return redirect(reverse('newsletter:newsletter_list'))
 
 
 class LogListView(LoginRequiredMixin, ListView):

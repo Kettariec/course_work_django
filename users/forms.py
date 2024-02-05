@@ -15,7 +15,7 @@ class UserForm(StyleFormMixin, UserChangeForm):
     """Форма профиля пользователя"""
     class Meta:
         model = User
-        fields = ('email', 'password', 'country', 'phone')
+        fields = ('email', 'password', 'country', 'phone', 'avatar')
 
     def __init__(self, *args, **kwargs):
         """Скрытие поля password"""

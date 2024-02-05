@@ -26,9 +26,9 @@
             <td>
                 <div class="btn-group">
                     <a type="button" class="btn btn-outline-primary btn-sm"
-                       href="#">Редактировать</a>
+                       href="{% url 'newsletter:edit_client' client.pk %}">Редактировать</a>
                     <a type="button" class="btn btn-outline-danger btn-sm"
-                       href="#">Удалить</a>
+                       href="{% url 'newsletter:delete_client' client.pk %}">Удалить</a>
                 </div>
             </td>
         </tr>

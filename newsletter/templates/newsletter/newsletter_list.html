@@ -37,18 +37,22 @@
                 <div class="btn-group">
 
                     <a type="button" class="btn btn-outline-primary btn-sm"
-                       href="#">Редактировать</a>
+                       href="{% url 'newsletter:edit_newsletter' newsletter.pk %}">Редактировать</a>
 
-
+                    {% if newsletter.status == 'created' %}
                     <a type="button" class="btn btn-outline-warning btn-sm"
-                       href="#">Завершить</a>
-
+                       href="{% url 'newsletter:status_newsletter' newsletter.pk %}">Начать</a>
+                    {% elif newsletter.status == 'started' %}
                     <a type="button" class="btn btn-outline-success btn-sm"
-                       href="#">Начать</a>
-
-
+                       href="{% url 'newsletter:status_newsletter' newsletter.pk %}">Остановить</a>
+                    {% else %}
+                    <a type="button" class="btn btn-outline-warning btn-sm"
+                       href="{% url 'newsletter:status_newsletter' newsletter.pk %}">Начать</a>
+                    {% endif %}
+                    <a type="button" class="btn btn-outline-primary btn-sm"
+                       href="{% url 'newsletter:finish_newsletter' newsletter.pk %}">Завершить</a>
                     <a type="button" class="btn btn-outline-danger btn-sm"
-                       href="#">Удалить</a>
+                       href="{% url 'newsletter:delete_newsletter' newsletter.pk %}">Удалить</a>
 
                 </div>
             </td>
