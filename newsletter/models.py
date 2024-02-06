@@ -70,7 +70,7 @@ class NewsLetter(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
-        return f'{self.date} \n {self.message}'
+        return f'{self.message}'
 
     class Meta:
         verbose_name = 'рассылка'
@@ -87,14 +87,15 @@ class NewsLetter(models.Model):
 class Log(models.Model):
     newsletter = models.ForeignKey('NewsLetter', on_delete=models.CASCADE,
                                    verbose_name='рассылка', **NULLABLE)
-    time = models.DateField(auto_now_add=True, verbose_name='время последней попытки')
+    date = models.DateField(auto_now_add=True, verbose_name='время последней попытки')
+    time = models.TimeField(auto_now_add=True, verbose_name='время последней попытки')
     status = models.CharField(max_length=150, verbose_name='статус отправки', **NULLABLE)
     # server_response = models.CharField(max_length=150, verbose_name='ответ сервера', **NULLABLE)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
-        return f'Отправлено: {self.time}, ' \
+        return f'Отправлено: {self.time},{self.date} ' \
                f'Статус: {self.status}'
 
     class Meta:

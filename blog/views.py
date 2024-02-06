@@ -31,10 +31,9 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
 class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
 
-    def get_queryset(self, *args, **kwargs):
-        """Отображение только опубликованных статей"""
-        queryset = super().get_queryset(*args, **kwargs)
-        return queryset
+    def get_queryset(self):
+        """Вывод постов пользователя"""
+        return super().get_queryset().filter(user=self.request.user)
 
 
 class BlogDetailView(LoginRequiredMixin, DetailView):
