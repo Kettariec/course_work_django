@@ -1,6 +1,7 @@
 {% extends 'newsletter/base.html' %}
 
 {% block content %}
+{% load my_tags %}
     <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
       <h1 class="display-4 fw-normal text-body-emphasis">Сервис e-mail рассылок</h1>
       <p class="fs-5 text-body-secondary">Добро пожаловать в лучший сервис e-mail рассылок! Создайте свою базу клиентов, оформите письма и ведите статистику рассылок. Для начала добавьте клиента, напишите сообщение и создавайте рассылки для своих клиентов!</p>
@@ -55,6 +56,24 @@
   </main>
 
   <footer class="pt-4 my-md-5 pt-md-5 border-top">
-
+    {% for blog in blog_list %}
+    <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+            {{ object|title }}
+            </div>
+            <img src="{% media_path object.image %}" class="card-img-top" alt="{{object.title}}">
+            <div class="card-body">
+            {{ object.body }}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="{% url 'blog:view' object.pk %}"
+                       class="btn btn-sm btn-outline-primary">Просмотр</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
   </footer>
 {% endblock %}

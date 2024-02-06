@@ -4,13 +4,13 @@ from django.conf import settings
 NULLABLE = {'blank': True, 'null': True}
 
 
-PERIODISITY_CHOISES = (
+PERIODICITY_CHOICES = (
     ('day', 'Раз в день'),
     ('week', 'Раз в неделю'),
     ('month', 'Раз в месяц'),
 )
 
-STATUS_CHOISES = (
+STATUS_CHOICES = (
     ('created', 'Создана'),
     ('started', 'Запущена'),
     ('completed', 'Завершена'),
@@ -22,8 +22,7 @@ class Client(models.Model):
     mail = models.EmailField(verbose_name='почта', unique=True)
     comment = models.TextField(verbose_name='комментарий', **NULLABLE)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                             default=1, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name} ({self.mail})'
@@ -38,8 +37,7 @@ class Message(models.Model):
     text = models.TextField(verbose_name='содержание')
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент', **NULLABLE)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                             default=1, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.title}'
@@ -50,17 +48,26 @@ class Message(models.Model):
 
 
 class NewsLetter(models.Model):
+    # time = models.TimeField(verbose_name='время рассылки')
+    # date = models.DateField(verbose_name='дата рассылки')
+    # periodisity = models.CharField(max_length=20, choices=PERIODISITY_CHOISES,
+    #                                default='created', verbose_name='статус рассылки')
+    # client = models.ManyToManyField('Client', verbose_name='клиент')
+    # message = models.ForeignKey('Message', on_delete=models.CASCADE, verbose_name='сообщение')
+    # status = models.CharField(max_length=20, choices=STATUS_CHOISES,
+    #                           default='created', verbose_name='статус рассылки')
+    #
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+    #                          default=1, verbose_name='пользователь')
     time = models.TimeField(verbose_name='время рассылки')
     date = models.DateField(verbose_name='дата рассылки')
-    periodisity = models.CharField(max_length=20, choices=PERIODISITY_CHOISES,
-                                   default='created', verbose_name='статус рассылки')
-    client = models.ManyToManyField('Client', verbose_name='клиент')
-    message = models.ForeignKey('Message', on_delete=models.CASCADE, verbose_name='сообщение')
-    status = models.CharField(max_length=20, choices=STATUS_CHOISES,
-                              default='created', verbose_name='статус рассылки')
+    periodicity = models.CharField(default='разовая', max_length=50,
+                                   verbose_name="периодичность", choices=PERIODICITY_CHOICES)
+    client = models.ManyToManyField(Client, verbose_name='клиент')
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='сообщение', **NULLABLE)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='created', verbose_name='статус')
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                             default=1, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return f'Дата: {self.date} \nСообщение: {self.message}'
@@ -72,23 +79,27 @@ class NewsLetter(models.Model):
     permissions = [
         (
             'set_status',
-            'Can change status'
+            'может изменять статус'
         )
     ]
 
 
 class Log(models.Model):
-    time = models.DateField(auto_now_add=True, verbose_name='время последней попытки')
-    status = models.BooleanField(verbose_name='статус попытки')
-    server_response = models.CharField(max_length=150, verbose_name='ответ сервера', **NULLABLE)
     newsletter = models.ForeignKey('NewsLetter', on_delete=models.CASCADE,
                                    verbose_name='рассылка', **NULLABLE)
+    time = models.DateField(auto_now_add=True, verbose_name='время последней попытки')
+    status = models.CharField(max_length=150, verbose_name='статус отправки', **NULLABLE)
+    # server_response = models.CharField(max_length=150, verbose_name='ответ сервера', **NULLABLE)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                             default=1, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.time = None
 
     def __str__(self):
-        return f'{self.time}'
+        return f'Отправлено: {self.time}, ' \
+               f'Статус: {self.status}'
 
     class Meta:
         verbose_name = 'лог'

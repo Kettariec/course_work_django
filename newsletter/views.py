@@ -2,6 +2,8 @@ from newsletter.forms import ClientForm, MessageForm, NewsLetterForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
+import random
+from blog.models import Blog
 from newsletter.models import Client, NewsLetter, Message, Log
 from django.views.generic import (CreateView, UpdateView,
                                   DeleteView, TemplateView, ListView)
@@ -17,10 +19,13 @@ class HomeTemplateView(TemplateView):
         message_count = len(Message.objects.filter(user=self.request.user.pk))
         newsletter_count = len(NewsLetter.objects.filter(user=self.request.user.pk))
         active_newsletter = len(NewsLetter.objects.filter(user=self.request.user.pk, status='started'))
+        blog_list = list(Blog.objects.all())
+        random.shuffle(blog_list)
         context_data['newsletter_count'] = newsletter_count
         context_data['client_count'] = client_count
         context_data['active_newsletter'] = active_newsletter
         context_data['message_count'] = message_count
+        context_data['blog_list'] = blog_list[:3]
         return context_data
 
 
@@ -186,5 +191,5 @@ class LogListView(LoginRequiredMixin, ListView):
     model = Log
 
     def get_queryset(self):
-        """Вывод сообщений пользователя"""
+        """Вывод логов пользователя"""
         return super().get_queryset().filter(user=self.request.user)

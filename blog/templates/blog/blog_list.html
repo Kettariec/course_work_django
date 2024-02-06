@@ -7,28 +7,34 @@
 </div>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     {% for object in object_list %}
-    {% if object.is_published %}
     <div class="col-md-4">
         <div class="card mb-4 box-shadow">
-        Материал {{ object|title }} <br>
-            Содержание: {{ object.body }}
+            <div class="card-header">
+            {{ object|title }}
+            </div>
             <img src="{% media_path object.image %}" class="card-img-top" alt="{{object.title}}">
+            <div class="card-body">
+            {{ object.body }}
+            </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a href="{% url 'blog:view' object.pk %}"
-                       class="btn btn-sm btn-outline-secondary">Просмотр</a>
+                       class="btn btn-sm btn-outline-primary">Просмотр</a>
                     <a href="{% url 'blog:edit' object.pk %}"
-                       class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                       class="btn btn-sm btn-outline-primary">Редактировать</a>
                     <a href="{% url 'blog:delete' object.pk %}"
-                       class="btn btn-sm btn-outline-secondary">Удалить</a>
+                       class="btn btn-sm btn-outline-danger">Удалить</a>
+                    {% if object.is_published %}
+                    <a href="{% url 'blog:toggle_activity' object.pk %}"
+                       class="btn btn-sm btn-warning">Скрыть</a>
+                    {% else %}
+                    <a href="{% url 'blog:toggle_activity' object.pk %}"
+                       class="btn btn-sm btn-warning">Опубликовать</a>
+                    {% endif %}
                 </div>
-
-              <a class="btn btn-warning" href="{% url 'blog:toggle_activity' object.pk %}">Скрыть</a>
-
             </div>
         </div>
     </div>
-    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

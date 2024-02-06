@@ -16,15 +16,13 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                {% for log in log_list %}
                 <tr>
-                    <td>...</td>
-                    <td>...</td>
-                    <td>
-                        ...
-                    </td>
+                    <td>{{log.pk}}</td>
+                    <td>{{log.newsletter}}</td>
+                    <td>{{log.status}}</td>
                 </tr>
-
+                {% endfor %}
                 </tbody>
             </table>
         </div>
