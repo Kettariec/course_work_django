@@ -11,62 +11,38 @@ def send_letter():
     weak = timedelta(days=7, hours=0, minutes=0)
     month = timedelta(days=30, hours=0, minutes=0)
 
-    newsletter = (NewsLetter.objects.all().filter(status='started')
-                  .filter(next_date=datetime.now(pytz.timezone('Europe/Moscow'))))
-
-    one_time = (NewsLetter.objects.all().filter(status='started')
-                .filter(date_time=datetime.now(pytz.timezone('Europe/Moscow'))))
+    newsletter = NewsLetter.objects.all().filter(status='started')
 
     for news in newsletter:
-        newsletter_list = [client.mail for client in news.client.all()]
 
-        result = send_mail(
-            subject=news.message.title,
-            message=news.message.text,
-            from_email=EMAIL_HOST_USER,
-            recipient_list=newsletter_list,
-            fail_silently=False,
-        )
+        if news.date_time == datetime.now() or news.next_date == datetime.now():
 
-        if result == 1:
-            status = 'Отправлено'
-        else:
-            status = 'Ошибка отправки'
-        print(status)
+            newsletter_list = [client.mail for client in news.client.all()]
 
-        log = Log(newsletter=news, status=status, user=news.user)
-        log.save()
+            result = send_mail(
+                subject=news.message.title,
+                message=news.message.text,
+                from_email=EMAIL_HOST_USER,
+                recipient_list=newsletter_list,
+                fail_silently=False,
+            )
 
-        if news.periodicity == 'day':
-            news.next_date = log.date + day
-        elif news.periodicity == 'week':
-            news.next_date = log.date + weak
-        elif news.periodicity == 'month':
-            news.next_date = log.date + month
+            if result == 1:
+                status = 'Отправлено'
+            else:
+                status = 'Ошибка отправки'
+            print(status)
 
-        if news.next_date > news.end_date:
-            news.status = 'completed'
-        news.save()
+            log = Log(newsletter=news, status=status, user=news.user)
+            log.save()
 
-    one_time = (NewsLetter.objects.all().filter(status='started')
-                  .filter(date_time=datetime.now(pytz.timezone('Europe/Moscow'))))
+            if news.periodicity == 'day':
+                news.next_date = log.date + day
+            elif news.periodicity == 'week':
+                news.next_date = log.date + weak
+            elif news.periodicity == 'month':
+                news.next_date = log.date + month
 
-    for send in one_time:
-        one_time_list = [client.mail for client in send.client.all()]
-
-        result = send_mail(
-            subject=send.message.title,
-            message=send.message.text,
-            from_email=EMAIL_HOST_USER,
-            recipient_list=one_time_list,
-            fail_silently=False,
-        )
-
-        if result == 1:
-            status = 'Отправлено'
-        else:
-            status = 'Ошибка отправки'
-        print(status)
-
-        log = Log(newsletter=news, status=status, user=news.user)
-        log.save()
+            if news.next_date > news.end_date:
+                news.status = 'completed'
+            news.save()
