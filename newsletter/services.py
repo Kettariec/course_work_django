@@ -30,8 +30,8 @@ def send_letter():
             status = 'Ошибка отправки'
         print(status)
 
-        # log = Log(newsletter=news, status=status, user=news.user)
-        # log.save()
+        log = Log(newsletter=news, status=status, user=news.user)
+        log.save()
 
         # if news.periodicity == 'ежедневно':
         #     news.date = log.time + day
