@@ -1,10 +1,12 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 NULLABLE = {'blank': True, 'null': True}
 
 
 PERIODICITY_CHOICES = (
+    ('one time', 'разовая'),
     ('day', 'Раз в день'),
     ('week', 'Раз в неделю'),
     ('month', 'Раз в месяц'),
@@ -21,7 +23,6 @@ class Client(models.Model):
     name = models.CharField(max_length=150, verbose_name='ФИО')
     mail = models.EmailField(verbose_name='почта', unique=True)
     comment = models.TextField(verbose_name='комментарий', **NULLABLE)
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
@@ -36,7 +37,6 @@ class Message(models.Model):
     title = models.CharField(max_length=150, verbose_name='заголовок')
     text = models.TextField(verbose_name='содержание')
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент', **NULLABLE)
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
@@ -48,25 +48,16 @@ class Message(models.Model):
 
 
 class NewsLetter(models.Model):
-    # time = models.TimeField(verbose_name='время рассылки')
-    # date = models.DateField(verbose_name='дата рассылки')
-    # periodisity = models.CharField(max_length=20, choices=PERIODISITY_CHOISES,
-    #                                default='created', verbose_name='статус рассылки')
-    # client = models.ManyToManyField('Client', verbose_name='клиент')
-    # message = models.ForeignKey('Message', on_delete=models.CASCADE, verbose_name='сообщение')
-    # status = models.CharField(max_length=20, choices=STATUS_CHOISES,
-    #                           default='created', verbose_name='статус рассылки')
-    #
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-    #                          default=1, verbose_name='пользователь')
-    time = models.TimeField(verbose_name='время рассылки')
-    date = models.DateField(verbose_name='дата рассылки')
-    periodicity = models.CharField(default='разовая', max_length=50,
+    name = models.CharField(verbose_name="название", max_length=50)
+    date_time = models.DateTimeField(default=timezone.now, verbose_name="дата и время для разовых", **NULLABLE)
+    start_date = models.DateTimeField(default=timezone.now, verbose_name="начало периода", **NULLABLE)
+    next_date = models.DateTimeField(default=timezone.now, verbose_name="следующая отправка", **NULLABLE)
+    end_date = models.DateTimeField(default=timezone.now, verbose_name="конец периода", **NULLABLE)
+    periodicity = models.CharField(default='one time', max_length=50,
                                    verbose_name="периодичность", choices=PERIODICITY_CHOICES)
     client = models.ManyToManyField(Client, verbose_name='клиент')
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='сообщение', **NULLABLE)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='created', verbose_name='статус')
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
@@ -90,8 +81,6 @@ class Log(models.Model):
     date = models.DateField(auto_now_add=True, verbose_name='время последней попытки')
     time = models.TimeField(auto_now_add=True, verbose_name='время последней попытки')
     status = models.CharField(max_length=150, verbose_name='статус отправки', **NULLABLE)
-    # server_response = models.CharField(max_length=150, verbose_name='ответ сервера', **NULLABLE)
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):

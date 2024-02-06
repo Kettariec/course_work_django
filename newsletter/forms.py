@@ -24,7 +24,7 @@ class MessageForm(StyleFormMixin, forms.ModelForm):
 class NewsLetterForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = NewsLetter
-        exclude = ('user', 'status',)
+        exclude = ('user', 'status', 'next_date',)
         widgets = {
             'time': forms.TimeInput(
                 attrs={'type': 'time', }
