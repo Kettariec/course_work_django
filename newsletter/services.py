@@ -15,7 +15,7 @@ def send_letter():
 
     for news in newsletter:
 
-        if news.date_time == datetime.now() or news.next_date == datetime.now():
+        if news.date_time == datetime.now() or news.next_date == datetime.now() or news.start_date == datetime.now():
 
             newsletter_list = [client.mail for client in news.client.all()]
 
