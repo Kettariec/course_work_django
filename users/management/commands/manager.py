@@ -10,8 +10,8 @@ class Command(BaseCommand):
         # Permission.objects.create(codename='set_status', name='Can change status', content_type=content_type_1)
         # Permission.objects.create(codename='set_is_active', name='Can deactivate user', content_type=content_type_2)
 
-        # manager_group = Group.objects.create(name='manager')
-        manager_group = Group.objects.get(name='manager')
+        manager_group = Group.objects.create(name='manager')
+        # manager_group = Group.objects.get(name='manager')
 
         perm_1 = Permission.objects.get(content_type__app_label='newsletter', content_type__model='newsletter',
                                         codename='view_newsletter')
