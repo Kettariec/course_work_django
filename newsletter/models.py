@@ -51,7 +51,7 @@ class NewsLetter(models.Model):
     name = models.CharField(verbose_name="название", max_length=50)
     date_time = models.DateTimeField(default=timezone.now, verbose_name="дата и время для разовых", **NULLABLE)
     start_date = models.DateTimeField(default=timezone.now, verbose_name="начало периода", **NULLABLE)
-    next_date = models.DateTimeField(default=timezone.now, verbose_name="следующая отправка", **NULLABLE)
+    next_date = models.DateTimeField(default=timezone.now, verbose_name="следующая отправка")
     end_date = models.DateTimeField(default=timezone.now, verbose_name="конец периода", **NULLABLE)
     periodicity = models.CharField(default='one time', max_length=50,
                                    verbose_name="периодичность", choices=PERIODICITY_CHOICES)
@@ -78,8 +78,7 @@ class NewsLetter(models.Model):
 class Log(models.Model):
     newsletter = models.ForeignKey('NewsLetter', on_delete=models.CASCADE,
                                    verbose_name='рассылка', **NULLABLE)
-    date = models.DateField(auto_now_add=True, verbose_name='время последней попытки')
-    time = models.TimeField(auto_now_add=True, verbose_name='время последней попытки')
+    date_time = models.DateTimeField(default=timezone.now, verbose_name="время последней рассылки", **NULLABLE)
     status = models.CharField(max_length=150, verbose_name='статус отправки', **NULLABLE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 

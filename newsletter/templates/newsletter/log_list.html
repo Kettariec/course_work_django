@@ -19,7 +19,7 @@
                 {% for log in log_list %}
                 <tr>
                     <td>{{log.pk}}</td>
-                    <td>{{log.time}} | {{log.date}} |  {{log.newsletter}}</td>
+                    <td>{{log.newsletter}}  {{log.date_time}}</td>
                     <td>{{log.status}}</td>
                 </tr>
                 {% endfor %}
