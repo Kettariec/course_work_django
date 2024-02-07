@@ -5,10 +5,10 @@ from django.core.management import BaseCommand
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        # content_type_1 = ContentType.objects.get(app_label='newsletter', model='newsletter')
-        # content_type_2 = ContentType.objects.get(app_label='users', model='user')
-        # Permission.objects.create(codename='set_status', name='Can change status', content_type=content_type_1)
-        # Permission.objects.create(codename='set_is_active', name='Can deactivate user', content_type=content_type_2)
+        content_type_1 = ContentType.objects.get(app_label='newsletter', model='newsletter')
+        content_type_2 = ContentType.objects.get(app_label='users', model='user')
+        Permission.objects.create(codename='set_status', name='Can change status', content_type=content_type_1)
+        Permission.objects.create(codename='set_is_active', name='Can deactivate user', content_type=content_type_2)
 
         manager_group = Group.objects.create(name='manager')
         # manager_group = Group.objects.get(name='manager')
