@@ -9,12 +9,13 @@ def send_letter():
     day = timedelta(days=1, hours=0, minutes=0)
     weak = timedelta(days=7, hours=0, minutes=0)
     month = timedelta(days=30, hours=0, minutes=0)
+    now = datetime.now()
 
     newsletter = list(NewsLetter.objects.all().filter(status='started'))
 
     for news in newsletter:
 
-        if news.date_time == datetime.now or news.next_date == datetime.datetime.now() or news.start_date == datetime.datetime.now()():
+        if news.date_time == now or news.next_date == now or news.start_date == now:
 
             newsletter_list = [client.mail for client in news.client.all()]
 
