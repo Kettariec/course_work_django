@@ -70,7 +70,7 @@ class NewsLetter(models.Model):
     permissions = [
         (
             'set_status',
-            'может изменять статус'
+            'Can change status'
         )
     ]
 
