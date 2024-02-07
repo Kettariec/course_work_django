@@ -2,7 +2,6 @@ from django.core.mail import send_mail
 from config.settings import EMAIL_HOST_USER
 from datetime import datetime, timedelta
 from newsletter.models import NewsLetter, Log
-import pytz
 
 
 def send_letter():
@@ -11,11 +10,11 @@ def send_letter():
     weak = timedelta(days=7, hours=0, minutes=0)
     month = timedelta(days=30, hours=0, minutes=0)
 
-    newsletter = NewsLetter.objects.all().filter(status='started')
+    newsletter = list(NewsLetter.objects.all().filter(status='started'))
 
     for news in newsletter:
 
-        if news.date_time == datetime.now() or news.next_date == datetime.now() or news.start_date == datetime.now():
+        if news.date_time == datetime.now or news.next_date == datetime.datetime.now() or news.start_date == datetime.datetime.now()():
 
             newsletter_list = [client.mail for client in news.client.all()]
 
