@@ -23,7 +23,9 @@ class Client(models.Model):
     name = models.CharField(max_length=150, verbose_name='ФИО')
     mail = models.EmailField(verbose_name='почта', unique=True)
     comment = models.TextField(verbose_name='комментарий', **NULLABLE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
+                             on_delete=models.CASCADE,
+                             verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name} ({self.mail})'
@@ -36,8 +38,11 @@ class Client(models.Model):
 class Message(models.Model):
     title = models.CharField(max_length=150, verbose_name='заголовок')
     text = models.TextField(verbose_name='содержание')
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент', **NULLABLE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
+    client = models.ForeignKey(Client,
+                               on_delete=models.CASCADE,
+                               verbose_name='клиент', **NULLABLE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.title}'
@@ -49,16 +54,26 @@ class Message(models.Model):
 
 class NewsLetter(models.Model):
     name = models.CharField(verbose_name="название", max_length=50)
-    date_time = models.DateTimeField(default=timezone.now, verbose_name="дата и время для разовых", **NULLABLE)
-    start_date = models.DateTimeField(default=timezone.now, verbose_name="начало периода", **NULLABLE)
-    next_date = models.DateTimeField(default=timezone.now, verbose_name="следующая отправка")
-    end_date = models.DateTimeField(default=timezone.now, verbose_name="конец периода", **NULLABLE)
+    date_time = models.DateTimeField(default=timezone.now,
+                                     verbose_name="дата и время для разовых",
+                                     **NULLABLE)
+    start_date = models.DateTimeField(default=timezone.now,
+                                      verbose_name="начало периода",
+                                      **NULLABLE)
+    next_date = models.DateTimeField(default=timezone.now,
+                                     verbose_name="следующая отправка")
+    end_date = models.DateTimeField(default=timezone.now,
+                                    verbose_name="конец периода", **NULLABLE)
     periodicity = models.CharField(default='one time', max_length=50,
-                                   verbose_name="периодичность", choices=PERIODICITY_CHOICES)
+                                   verbose_name="периодичность",
+                                   choices=PERIODICITY_CHOICES)
     client = models.ManyToManyField(Client, verbose_name='клиент')
-    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='сообщение', **NULLABLE)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='created', verbose_name='статус')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
+    message = models.ForeignKey(Message, on_delete=models.CASCADE,
+                                verbose_name='сообщение', **NULLABLE)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES,
+                              default='created', verbose_name='статус')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
+                             on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.message}'

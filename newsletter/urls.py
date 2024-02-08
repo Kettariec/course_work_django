@@ -2,8 +2,9 @@ from newsletter.apps import NewsletterConfig
 from django.urls import path
 from newsletter.views import (HomeTemplateView, ClientListView, ClientUpdateView,
                               ClientDeleteView, MessageCreateView, MessageListView,
-                              MessageUpdateView, MessageDeleteView, LogListView, NewsLetterDeleteView,
-                              NewsLetterCreateView, NewsLetterListView, NewsLetterUpdateView, ClientCreateView,
+                              MessageUpdateView, MessageDeleteView, LogListView,
+                              NewsLetterDeleteView, NewsLetterCreateView,
+                              NewsLetterListView, NewsLetterUpdateView, ClientCreateView,
                               status_newsletter, finish_newsletter)
 
 

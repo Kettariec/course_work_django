@@ -9,7 +9,8 @@ import random
 from config.settings import EMAIL_HOST_USER
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import (PermissionRequiredMixin,
+                                        LoginRequiredMixin)
 from django.contrib.messages.views import SuccessMessageMixin
 
 
@@ -28,7 +29,8 @@ class RegisterUserView(SuccessMessageMixin, CreateView):
     template_name = 'users/register.html'
 
     def get_success_message(self, cleaned_data):
-        return 'Вам на почту отправлено письмо, для прохождения верификации перейдите по ссылку в письме'
+        return ('Вам на почту отправлено письмо, '
+                'для прохождения верификации перейдите по ссылку в письме')
 
     def form_valid(self, form):
         """Верификация по ссылке через почту"""
@@ -38,7 +40,8 @@ class RegisterUserView(SuccessMessageMixin, CreateView):
         new_user.is_active = False
         send_mail(
             'Верификация',
-            f'Перейдите по ссылке для верификации: http://127.0.0.1:8000/users/verification/{code}',
+            f'Перейдите по ссылке для верификации: '
+            f'http://127.0.0.1:8000/users/verification/{code}',
             EMAIL_HOST_USER,
             [new_user.email]
         )
@@ -75,7 +78,9 @@ def generate_password(request):
         EMAIL_HOST_USER,
         [request.user.email]
     )
-    messages.success(request, 'Вам на почту отправлено письмо с новым паролем для вашего аккаунта')
+    messages.success(request,
+                     'Вам на почту отправлено письмо '
+                     'с новым паролем для вашего аккаунта')
     return redirect(reverse('users:login'))
 
 

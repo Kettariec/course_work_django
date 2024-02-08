@@ -1,6 +1,6 @@
 from newsletter.forms import ClientForm, MessageForm, NewsLetterForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 import random
 from blog.models import Blog
@@ -17,8 +17,10 @@ class HomeTemplateView(TemplateView):
         context_data = super().get_context_data(*args, **kwargs)
         client_count = len(Client.objects.filter(user=self.request.user.pk))
         message_count = len(Message.objects.filter(user=self.request.user.pk))
-        newsletter_count = len(NewsLetter.objects.filter(user=self.request.user.pk))
-        active_newsletter = len(NewsLetter.objects.filter(user=self.request.user.pk, status='started'))
+        newsletter_count = len(NewsLetter.objects.filter
+                               (user=self.request.user.pk))
+        active_newsletter = len(NewsLetter.objects.filter
+                                (user=self.request.user.pk, status='started'))
         blog_list = list(Blog.objects.all())
         random.shuffle(blog_list)
         context_data['newsletter_count'] = newsletter_count

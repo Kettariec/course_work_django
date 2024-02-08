@@ -38,7 +38,8 @@ def send_letter():
                 log.save()
 
         else:
-            if news.next_date.strftime('%Y-%m-%d %H:%M') == now or news.start_date.strftime('%Y-%m-%d %H:%M') == now:
+            if (news.next_date.strftime('%Y-%m-%d %H:%M') == now
+                    or news.start_date.strftime('%Y-%m-%d %H:%M') == now):
 
                 newsletter_list = [client.mail for client in news.client.all()]
 
@@ -66,6 +67,7 @@ def send_letter():
                 elif news.periodicity == 'month':
                     news.next_date = log.date_time + month
 
-                if news.next_date.strftime('%Y-%m-%d %H:%M') > news.end_date.strftime('%Y-%m-%d %H:%M'):
+                if (news.next_date.strftime('%Y-%m-%d %H:%M') >
+                        news.end_date.strftime('%Y-%m-%d %H:%M')):
                     news.status = 'completed'
                 news.save()

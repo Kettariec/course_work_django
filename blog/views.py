@@ -1,10 +1,11 @@
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import (CreateView, ListView,
+                                  DetailView, UpdateView, DeleteView)
 from blog.models import Blog
 from blog.forms import BlogForm
 from pytils.translit import slugify
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class BlogCreateView(LoginRequiredMixin, CreateView):
