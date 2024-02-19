@@ -24,7 +24,7 @@ class Client(models.Model):
     mail = models.EmailField(verbose_name='почта', unique=True)
     comment = models.TextField(verbose_name='комментарий', **NULLABLE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
-                             on_delete=models.CASCADE,
+                             on_delete=models.CASCADE, related_name='clients',
                              verbose_name='пользователь')
 
     def __str__(self):
@@ -41,7 +41,7 @@ class Message(models.Model):
     client = models.ForeignKey(Client,
                                on_delete=models.CASCADE,
                                verbose_name='клиент', **NULLABLE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='messages',
                              default=1, on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
@@ -72,7 +72,7 @@ class NewsLetter(models.Model):
                                 verbose_name='сообщение', **NULLABLE)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES,
                               default='created', verbose_name='статус')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, related_name='newsletters',
                              on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
@@ -95,7 +95,8 @@ class Log(models.Model):
                                    verbose_name='рассылка', **NULLABLE)
     date_time = models.DateTimeField(default=timezone.now, verbose_name="время последней рассылки", **NULLABLE)
     status = models.CharField(max_length=150, verbose_name='статус отправки', **NULLABLE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE, verbose_name='пользователь')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, related_name='logs',
+                             on_delete=models.CASCADE, verbose_name='пользователь')
 
     def __str__(self):
         return f'Отправлено: {self.time},{self.date} ' \
