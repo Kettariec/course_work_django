@@ -9,7 +9,7 @@ app_name = UsersConfig.name
 
 urlpatterns = [
     path('', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('logout/', UserLogoutView.as_view(http_method_names = ['get', 'post', 'options']), name='logout'),
     path('register/', RegisterUserView.as_view(), name='register'),
     path('verification/<str:code>/', verification, name='verification'),
     path('profile/genpassword', generate_password, name='genpassword'),

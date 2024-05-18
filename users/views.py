@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import (PermissionRequiredMixin,
                                         LoginRequiredMixin)
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth import logout
 
 
 class UserLoginView(LoginView):
@@ -19,7 +20,9 @@ class UserLoginView(LoginView):
 
 
 class UserLogoutView(LogoutView):
-    pass
+    def get(self, request):
+        logout(request)
+        return redirect('newsletter:index')
 
 
 class RegisterUserView(SuccessMessageMixin, CreateView):

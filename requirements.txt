@@ -1,8 +1,9 @@
-django
-psycopg2-binary
-pillow
-python-dotenv
-redis
-apscheduler
-pytils
-pytz
+django==5.0.1
+psycopg2-binary==2.9.9
+pillow==10.2.0
+python-dotenv==1.0.1
+redis==5.0.1
+apscheduler==3.10.4
+django-apscheduler==0.6.2
+pytils==0.4.1
+pytz==2024.1
