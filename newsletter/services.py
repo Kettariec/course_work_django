@@ -6,6 +6,8 @@ from newsletter.models import NewsLetter, Log
 
 def send_letter():
     """Функция отправки сообщения списку клиентов"""
+    # with open('test.txt', 'a', encoding='utf-8') as f:
+    #     f.write(datetime.now().strftime('%Y-%m-%d %H:%M') + '\n')
     day = timedelta(days=1, hours=0, minutes=0)
     weak = timedelta(days=7, hours=0, minutes=0)
     month = timedelta(days=30, hours=0, minutes=0)
