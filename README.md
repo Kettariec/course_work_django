@@ -1,8 +1,5 @@
 
-<h2 align="center">Курсовая работа Django</h2>
-
-Веб-приложение сервиса управления рассылками, администрирования и получения статистики.
-
+<h2 align="center">Веб-приложение сервиса управления рассылками, администрирования и получения статистики.</h2>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -79,5 +76,3 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 kettariec@gmail.com
 
 https://github.com/Kettariec/course_work_django
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
