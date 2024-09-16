@@ -10,7 +10,7 @@
 
 Создать образы и контейнеры Docker с помощью команд: "docker-compose build" и "docker-compose up".
 
-## Структура проекта
+## Project structure
 
 config/
 
@@ -64,15 +64,10 @@ requirements.txt - список зависимостей для проекта.
 
 env.sample - пример заполнения переменных окружения.
 
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
 
 <!-- CONTACT -->
 ## Contact
 
 kettariec@gmail.com
 
-https://github.com/Kettariec/course_work_django
+https://github.com/Kettariec/mailing_service_django
